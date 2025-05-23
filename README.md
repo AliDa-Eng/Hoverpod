@@ -1,6 +1,6 @@
 # Hoverpod X  FPGA based Autonomous Hovering Camera Platform
 
-** Hoverpod X ** is an open-source, FPGA-powered smart camera platform that replaces traditional tripods. Designed to track user movement and stabilize mobile phones like the iPhone during filming, Hoverpod X is ideal for vloggers, athletes and content creators seeking hands-free, smooth video capture. 
+**Hoverpod X** is an open-source, FPGA-powered smart camera platform that replaces traditional tripods. Designed to track user movement and stabilize mobile phones like the iPhone during filming, Hoverpod X is ideal for vloggers, athletes and content creators seeking hands-free, smooth video capture. 
 
 ## Project Overview 
 This project explores the use of FPGAs for real-time motor control, PWM signal generation and stabilization logic to build a self-balancing, hovering platform. It leverages BLDC motors fir veritical lift and servo motors for pan/tilt control of an iphone mount. 
@@ -18,11 +18,11 @@ This project explores the use of FPGAs for real-time motor control, PWM signal g
 ---
 
 ## System Architecture 
-1. ** Payload Layer (Camera Mount & Stabilization)**
+1. **Payload Layer (Camera Mount & Stabilization)**
   - iPhone Mount on a servo driven gimbal
   - Controlled via FPGA generated PWM signals
   - Allows pan/tilt to keep subject centered
-2. ** Control Layer (FPGA Core Logic) **
+2. **Control Layer (FPGA Core Logic)**
   This is the brain of the system. Implemented on the Basys 3 FPGA.
     Verilog Modules:
   - pwm_generator.v: Produces PWM signals for both BLDC motors via ESCs and servos
@@ -31,11 +31,11 @@ This project explores the use of FPGAs for real-time motor control, PWM signal g
   - imu_interface.v: Reads orientation from MPU6050 
   - pid_controller.v: Implements stabilization logic for flight balance
   - tracker_interface.v: (Future development): Takes in user position data from sensor tags for       tracking
-3. ** Actuation Layer (Motors & Servo)**
+3. **Actuation Layer (Motors & Servo)**
   - 4x BLDC motors provide lift, controlled via ESCs
   - Servo motors adjust the iphone gimbal's angle
   - All motors receive PWM signals from the FPGA
-4. ** Power & Regulation Layer**
+4. **Power & Regulation Layer**
   - 4S LiPo Battery (14.8 V)
     - Directly powers ESCs + BLDC motors
     - Passed through a buck converter (LM2596) to power:
