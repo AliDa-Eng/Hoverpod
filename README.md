@@ -45,14 +45,45 @@ This project explores the use of FPGAs for real-time motor control, PWM signal g
   - Allows pan/tilt to keep subject centered
 
 ---
-## Data Flow 
-[MPU6050] --orientation--> [FPGA PID Logic] --PWM--> [ESCs & Servos]
-                                    |
-[iPhone Gimbal] <---PWM------------|
-                                    |
-[FPGA PWM Gen] --PWM signals------> [ESCs] ---> [BLDC Motors]
-                                    |
-                                  Power (Battery)
+---
+
+## System Data Flow
+
+The Hoverpod X platform follows a structured control flow centered around real-time motor management and stabilization:
+
+1. **Sensor Feedback (IMU) → FPGA Control Logic**  
+   - The **MPU6050 IMU** continuously measures orientation data (pitch, roll, yaw).
+   - This data is sent to the FPGA over an I²C interface.
+   - The FPGA processes this data using a PID control algorithm , generating corrective control signals.
+
+2. **FPGA → PWM Generator → Actuators**
+   - The control logic feeds target motor speeds to the PWM generator module.
+   - The FPGA outputs PWM signals:
+     - To ESCs for controlling BLDC motors (hover and lift).
+     - To servo motors for adjusting the iPhone pan/tilt gimbal.
+
+3. **User Tracking (Future Phase)**
+   - A separate module (e.g., a Raspberry Pi with camera) will identify and track the user.
+   - Target movement data will be sent to the FPGA via a UART or SPI interface.
+   - The FPGA will translate this into position adjustments for the servos and motor balance.
+
+4. **Power Distribution**
+   - The **LiPo battery** provides primary power:
+     - Directly to the ESCs and motors
+     - Through a buck converter to power the FPGA and servos
+   - All components share a common ground to ensure consistent signal referencing.
+
+---
+
+### 🔁 Summary of Flow
+
+- **Sensors → FPGA**: Orientation and tracking inputs
+- **FPGA → Actuators**: PWM control of BLDCs and servos
+- **Battery → Power Rails**: Isolated and regulated power delivery
+- **External Module (Future Dev)**: tag for user tracking
+
+This architecture ensures responsive control, modular development, and reliable signal flow, closely emulating real-world embedded robotics systems.
+
 ---
 
 ---
@@ -95,21 +126,21 @@ Here is a complete hardware list for building the Hoverpod X prototype. Componen
 
 | Category            | Component                        | Specs / Notes                                                              | Qty | Est. Price (USD) |
 |---------------------|----------------------------------|----------------------------------------------------------------------------|-----|------------------|
-| 🧠 **FPGA Controller** | **Basys 3 Board**                | Xilinx Artix-7 FPGA, 3.3V IO, micro-USB + barrel power input               | 1   | $150              |
+|  **FPGA Controller** | **Basys 3 Board**                | Xilinx  FPGA, 3.3V IO, micro-USB + barrel power input               | 1   | $150              |
 |                    | Jumper Wires                     | Male-male and male-female for interfacing                                  | 1 set | $6               |
-| ⚙️ **Motors**        | **BLDC Motors**                  | 2206 or 2207 size, ~600–800g thrust on 3S or 4S battery                     | 4   | $15 ea ($60)     |
+|  **Motors**        | **BLDC Motors**                  | 2206 or 2207 size, ~600–800g thrust on 3S or 4S battery                     | 4   | $15 ea ($60)     |
 |                    | **ESCs**                          | 20A–30A brushless ESC with PWM signal input                                | 4   | $10 ea ($40)     |
-| 🧭 **Stabilization** | **MPU6050 IMU**                  | 3-axis gyro + 3-axis accelerometer, I2C-compatible with FPGA               | 1   | $5               |
-| 🔩 **Servos**        | **SG90** or **MG996R**           | For pan/tilt mount. MG996R is more powerful (~2.5–5kg·cm torque)           | 2   | $6–$10 ea        |
-| 📱 **Mount**         | iPhone Tripod Adapter            | Holds the iPhone; 3D printed bracket or clamp mount                        | 1   | $10              |
-| 🔋 **Power**         | **3S LiPo Battery**              | 11.1V, 2200mAh, 25C–35C (power for ESCs + servos)                           | 1   | $25              |
+|  **Stabilization** | **MPU6050 IMU**                  | 3-axis gyro + 3-axis accelerometer, I2C-compatible with FPGA               | 1   | $5               |
+|  **Servos**        | **SG90** or **MG996R**           | For pan/tilt mount. MG996R is  powerful (~2.5–5kg·cm torque)           | 2   | $6–$10 ea        |
+|  **Mount**         | iPhone Tripod Adapter            | Holds the iPhone; 3D printed bracket or clamp mount                        | 1   | $10              |
+|  **Power**         | **3S LiPo Battery**              | 11.1V, 2200mAh, 25C–35C (power for ESCs + servos)                           | 1   | $25              |
 |                    | **DC-DC Buck Converter**         | LM2596-based 11.1V → 5V for FPGA and servos                                | 2   | $6 ea ($12)      |
 |                    | **Barrel Jack Adapter**           | 2.1mm center-positive, to plug into Basys 3 barrel port                    | 1   | $3               |
 |                    | **Power Distribution Board**      | Optional for clean power wiring to ESCs/servos                             | 1   | $8               |
-| 🧰 **Frame**         | Carbon or Aluminum Arms          | Light, durable material for mounting motors + central frame                | —   | ~$15             |
+|  **Frame**         | Carbon or Aluminum Arms          | Light, durable material for mounting motors + central frame                | —   | ~$15             |
 |                    | Screws, spacers, zip ties         | For clean mounting and wire organization                                   | —   | ~$5              |
-| 🧪 **Testing**       | Breadboard + Headers             | For prototyping PWM + servo connections                                    | 1   | $10              |
-|                    | Oscilloscope (optional)           | To test PWM output (can borrow or use logic analyzer)                      | —   | —                |
+|  **Testing**       | Breadboard + Headers             | For prototyping PWM + servo connections                                    | 1   | $10              |
+|                    | Oscilloscope                     | To test PWM output (or use logic analyzer )                                | —   | —                |
 
 ###  Estimated Total Cost: **~$360–$400 USD**
 
