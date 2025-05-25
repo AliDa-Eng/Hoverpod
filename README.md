@@ -3,7 +3,7 @@
 **Hoverpod X** is an open-source, FPGA-powered smart camera platform that replaces traditional tripods. Designed to track user movement and stabilize mobile phones like the iPhone during filming, Hoverpod X is ideal for vloggers, athletes and content creators seeking hands-free, smooth video capture. 
 
 ## Project Overview 
-This project explores the use of FPGAs for real-time motor control, PWM signal generation and stabilization logic to build a self-balancing, hovering platform. It leverages BLDC motors fir veritical lift and servo motors for pan/tilt control of an iphone mount. 
+This project explores the use of FPGAs for real-time motor control, PWM signal generation and stabilization logic to build a self-balancing, hovering platform. It leverages BLDC motors for veritical lift and servo motors for pan/tilt control of an iphone mount. 
 
 ---
 
